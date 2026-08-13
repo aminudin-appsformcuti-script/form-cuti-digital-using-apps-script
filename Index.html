@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Cuti SPX Express</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:ital,wght@0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .brand-font { font-family: 'Poppins', sans-serif; }
+        .input-modern { width: 100%; border: 1px solid #cbd5e1; padding: 0.625rem 0.875rem; border-radius: 0.375rem; outline: none; background-color: #fff; transition: all 0.2s; font-size: 0.875rem; }
+        .input-modern:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15); }
+        .input-modern:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; border-color: #e2e8f0; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen p-3 md:p-8 flex items-center justify-center text-slate-800">
+
+    <div class="max-w-3xl w-full bg-white rounded-xl shadow-xl overflow-hidden border border-slate-200/60" id="form-container">
+        
+        <div class="bg-gradient-to-r from-orange-600 to-amber-500 px-6 py-6 text-center text-white relative">
+            <h1 class="brand-font text-3xl font-black tracking-tight italic">SPX <span class="font-normal not-italic text-orange-100">Express</span></h1>
+            <p class="text-xs uppercase tracking-widest font-semibold mt-1 text-orange-100/90">Formulir Pengajuan Cuti Karyawan</p>
+            <span id="role-badge" class="absolute top-3 right-3 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase"></span>
+        </div>
+
+        <div class="p-5 md:p-8">
+            <div id="success-alert" class="hidden mb-6 p-4 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-lg text-center shadow-sm">
+                <p id="alert-text" class="font-semibold text-sm mb-3">🎉 Form sukses diproses!</p>
+                <a id="download-btn" target="_blank" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-md shadow inline-flex items-center gap-2 text-xs transition-all cursor-pointer">
+                    💾 Buka / Unduh Dokumen PDF Cuti
+                </a>
+            </div>
+
+            <div id="reject-alert" class="hidden mb-6 p-4 bg-rose-50 border border-rose-300 text-rose-800 rounded-lg text-center shadow-sm">
+                <p id="reject-alert-text" class="font-semibold text-sm">❌ Pengajuan cuti ini telah ditolak.</p>
+            </div>
+
+            <form id="leave-form" class="space-y-6">
+                <!-- Data Karyawan -->
+                <div class="bg-white border border-slate-200 rounded-lg p-5 space-y-4 shadow-xs">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-2 mb-2 flex items-center gap-1.5">
+                        👤 Informasi Karyawan
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Nama Lengkap</label>
+                            <input type="text" id="nama" required class="input-modern">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">ID SPX</label>
+                            <input type="text" id="id_spx" required class="input-modern" placeholder="Contoh: SPX12345">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Unit Kerja</label>
+                            <input type="text" id="unit_kerja" value="TRANSIT POINT KARAWACI DC" required class="input-modern">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Team</label>
+                            <select class="input-modern" id="team" name="team" required>
+                                <option value="" selected disabled>-- Pilih Team --</option>
+                                <option value="Team A">Team A</option>
+                                <option value="Team B">Team B</option>
+                                <option value="Team C">Team C</option>
+                                <option value="Team D">Team D</option>
+                                <option value="Team DKM">Team DKM</option>
+                                <option value="Team Admin">Team Admin</option>
+                                <option value="Team EHA">Team EHA</option>
+                                <option value="Team Lead">Team Lead</option>
+                                <option value="Ass Lead">Ass Lead</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Email Karyawan</label>
+                            <input type="email" id="email_karyawan" required class="input-modern" placeholder="nama@email.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Tanggal Bergabung</label>
+                            <input type="date" id="tgl_gabung" required class="input-modern">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rencana Cuti -->
+                <div class="bg-white border border-slate-200 rounded-lg p-5 space-y-4 shadow-xs">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-2 mb-2 flex items-center gap-1.5">
+                        📅 Rencana & Alasan Cuti
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Kategori Cuti</label>
+                            <select class="input-modern" id="kategori_cuti" required>
+                                <option value="Cuti Tahunan" selected>Cuti Tahunan</option>
+                                <option value="Cuti Mendadak / Emergency">Cuti Mendadak / Emergency</option>
+                                <option value="Cuti Sakit">Cuti Sakit</option>
+                                <option value="Cuti Melahirkan / Khusus">Cuti Melahirkan / Khusus</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Karyawan Back-Up (Delegasi)</label>
+                            <input type="text" id="backup" required class="input-modern" placeholder="Nama rekan kerja pengganti">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Mulai Cuti</label>
+                            <input type="date" id="tgl_mulai" required class="input-modern">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Selesai Cuti</label>
+                            <input type="date" id="tgl_selesai" required class="input-modern">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Durasi (Hari)</label>
+                            <input type="number" id="lama_cuti" readonly placeholder="0" class="input-modern font-bold text-orange-600 bg-slate-50 text-center">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Alasan Cuti</label>
+                        <input type="text" id="alasan" required class="input-modern" placeholder="Sebutkan keperluan cuti Anda">
+                    </div>
+
+                    <!-- Area Lampiran / Evidence Foto (Default: hidden) -->
+                    <div id="evidence_section" class="pt-2 hidden">
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Lampiran Foto / Bukti Evidence (Khusus Cuti Mendadak)</label>
+                        
+                        <!-- Box Input untuk Karyawan -->
+                        <div id="evidence_input_box">
+                            <input type="file" id="evidence_file" accept="image/*" class="input-modern text-xs">
+                        </div>
+
+                        <!-- Box Tampilan Khusus Approver (TL / SL / TP LEAD) -->
+                        <div id="evidence_approver_view" class="hidden mt-2 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                            <div id="evidence_image_container" class="hidden flex flex-col items-start gap-2">
+                                <span class="text-xs font-semibold text-slate-700">📸 Foto Bukti yang Dilampirkan:</span>
+                                <div class="relative group rounded-lg overflow-hidden border border-slate-300 bg-white p-1">
+                                    <img id="evidence_img_preview" src="" alt="Bukti Evidence" class="h-44 w-auto max-w-full rounded object-contain cursor-pointer" onclick="window.open(this.src, '_blank')">
+                                </div>
+                                <a id="evidence_url" href="#" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-orange-600 hover:text-orange-700 underline">
+                                    🔍 Buka Foto Bukti Ukuran Penuh
+                                </a>
+                            </div>
+                            <div id="no_evidence_text" class="text-xs text-slate-500 italic">
+                                ℹ️ Tidak ada lampiran foto bukti pada pengajuan ini.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAD TTD TUNGGAL -->
+                <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-xs">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-4">
+                        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                            ✍️ Lembar Tanda Tangan
+                        </h2>
+                        <span class="text-[11px] text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded" id="date-label">Tangerang, <span id="current-date">...</span></span>
+                    </div>
+
+                    <div class="w-full">
+                        <label id="sigLabel" class="block text-sm font-bold text-orange-600 mb-2 uppercase tracking-wide">
+                            <!-- Label dinamis diisi JavaScript -->
+                        </label>
+                        
+                        <!-- Box Pad Luas (Tinggi 200px) -->
+                        <div class="w-full h-52 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 p-1 transition-all focus-within:border-orange-500 focus-within:bg-white shadow-inner">
+                            <canvas id="signaturePad" class="w-full h-full rounded-lg cursor-crosshair touch-none bg-white"></canvas>
+                        </div>
+                        
+                        <div class="mt-3 flex justify-between items-center text-xs">
+                            <span class="text-slate-400 italic">Gunakan mouse atau sentuhan layar untuk membuat TTD</span>
+                            <div class="flex gap-4 font-semibold">
+                                <button type="button" onclick="undoSignature()" class="text-blue-600 hover:text-blue-800 transition cursor-pointer flex items-center gap-1">↶ Undo</button>
+                                <button type="button" onclick="clearSignature()" class="text-red-500 hover:text-red-700 transition cursor-pointer flex items-center gap-1">✕ Bersih/Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOMBOL AKSI HARIAN ( APPROVE / REJECT ) -->
+                <div class="pt-2" id="action-buttons">
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                        <button type="button" id="reject-btn" onclick="openRejectModal()" class="hidden w-full sm:w-1/2 bg-rose-600 text-white px-8 py-3.5 rounded-lg font-bold hover:bg-rose-700 active:scale-98 transition-all uppercase text-xs tracking-wider shadow-md hover:shadow-rose-600/20 cursor-pointer">
+                            ❌ Tolak Pengajuan
+                        </button>
+                        <button type="submit" id="main-submit-btn" class="w-full sm:w-1/2 bg-orange-600 text-white px-8 py-3.5 rounded-lg font-bold hover:bg-orange-700 active:scale-98 transition-all uppercase text-xs tracking-wider shadow-md hover:shadow-orange-600/20 cursor-pointer">
+                            Kirim Pengajuan Cuti
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Approval -->
+    <div id="review-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-all">
+        <div class="bg-white rounded-xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-100">
+            <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-3 font-bold text-xl">❓</div>
+            <h3 class="text-base font-bold text-slate-900 mb-1">Konfirmasi Aksi</h3>
+            <p class="text-xs text-slate-500 mb-5 leading-relaxed">Apakah seluruh data dan tanda tangan Anda sudah sesuai?</p>
+            <div class="flex gap-3">
+                <button type="button" id="back-btn" class="flex-1 border border-slate-300 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer">Perbaiki</button>
+                <button type="button" id="confirm-btn" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded-lg text-xs font-semibold transition shadow-sm cursor-pointer">Kirim Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Reject -->
+    <div id="reject-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-all">
+        <div class="bg-white rounded-xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-100">
+            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-3 font-bold text-xl">⚠️</div>
+            <h3 class="text-base font-bold text-slate-900 mb-1">Konfirmasi Penolakan</h3>
+            <p class="text-xs text-slate-500 mb-5 leading-relaxed">Apakah Anda yakin ingin <b>MENOLAK</b> pengajuan cuti ini?</p>
+            <div class="flex gap-3">
+                <button type="button" onclick="closeRejectModal()" class="flex-1 border border-slate-300 py-2.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer">Batal</button>
+                <button type="button" id="confirm-reject-btn" onclick="executeReject()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-lg text-xs font-semibold transition shadow-sm cursor-pointer">Ya, Tolak Cuti</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CURRENT_ROLE = "<?= role ?>".toLowerCase().trim();
+        const REQ_ID = "<?= reqId ?>";
+
+        document.getElementById('role-badge').innerText = `MODE: ${CURRENT_ROLE || 'karyawan'}`;
+
+        var canvas = document.getElementById("signaturePad");
+        var signaturePad;
+        var base64EvidenceData = "";
+
+        // Fungsi Tampilkan/Sembunyikan Kolom Evidence Berdasarkan Kategori Cuti
+        function toggleEvidenceSection() {
+            const kategori = document.getElementById('kategori_cuti').value;
+            const evidenceSection = document.getElementById('evidence_section');
+            const fileInput = document.getElementById('evidence_file');
+
+            // Munculkan khusus Cuti Mendadak / Emergency atau Cuti Sakit
+            if (kategori === "Cuti Mendadak / Emergency" || kategori === "Cuti Sakit") {
+                evidenceSection.classList.remove('hidden');
+            } else {
+                evidenceSection.classList.add('hidden');
+                if (fileInput) fileInput.value = "";
+                base64EvidenceData = ""; // Reset data gambar jika disembunyikan
+            }
+        }
+
+        // Listener perubahan kategori cuti
+        document.getElementById('kategori_cuti').addEventListener('change', toggleEvidenceSection);
+
+        // Fungsi Membaca & Kompres Foto Evidence ke Base64 (Maksimal Lebar/Tinggi 1000px)
+        document.getElementById('evidence_file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) {
+                base64EvidenceData = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const max_size = 1000;
+
+                    if (width > height) {
+                        if (width > max_size) {
+                            height *= max_size / width;
+                            width = max_size;
+                        }
+                    } else {
+                        if (height > max_size) {
+                            width *= max_size / height;
+                            height = max_size;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    base64EvidenceData = canvas.toDataURL('image/jpeg', 0.7);
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function terapkanHakAksesUIRole() {
+            if (CURRENT_ROLE !== "karyawan" && CURRENT_ROLE !== "") {
+                const inputs = document.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    if (input.id !== "lama_cuti") input.disabled = true;
+                });
+                
+                // Approver view: sembunyikan input file dan tampilkan container bukti
+                document.getElementById("evidence_input_box").classList.add("hidden");
+                document.getElementById("evidence_approver_view").classList.remove("hidden");
+
+                // Tampilkan Tombol Reject untuk Approver
+                document.getElementById("reject-btn").classList.remove("hidden");
+            } else {
+                const mainBtn = document.getElementById("main-submit-btn");
+                mainBtn.classList.remove("sm:w-1/2");
+                mainBtn.classList.add("sm:w-auto");
+            }
+
+            var sigLabel = document.getElementById("sigLabel");
+            var mainBtn = document.getElementById("main-submit-btn");
+
+            if (CURRENT_ROLE === "karyawan" || CURRENT_ROLE === "") {
+                sigLabel.innerText = "✍️ Tanda Tangan Pemohon (Karyawan):";
+                mainBtn.innerText = "Kirim Pengajuan Cuti";
+            } else if (CURRENT_ROLE === "tl" || CURRENT_ROLE === "team lead") {
+                sigLabel.innerText = "✍️ Tanda Tangan Team Lead (TL):";
+                mainBtn.innerText = "✔ Approve (TL)";
+            } else if (CURRENT_ROLE === "sl" || CURRENT_ROLE === "shift lead") {
+                sigLabel.innerText = "✍️ Tanda Tangan Shift Lead (SL):";
+                mainBtn.innerText = "✔ Approve (SL)";
+            } else if (CURRENT_ROLE === "tp" || CURRENT_ROLE === "tplead" || CURRENT_ROLE === "tp lead") {
+                sigLabel.innerText = "✍️ Tanda Tangan TP Lead:";
+                mainBtn.innerText = "✔ Approve Final (TP Lead)";
+            }
+        }
+
+        // Helper untuk mengubah Link Google Drive menjadi Direct Thumbnail Image
+        function convertDriveUrlToThumbnail(url) {
+            if (!url) return "";
+            var match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return "https://lh3.googleusercontent.com/d/" + match[1];
+            }
+            return url;
+        }
+
+        function loadDataPengajuanKaryawan() {
+            if (CURRENT_ROLE !== "karyawan" && CURRENT_ROLE !== "" && REQ_ID !== "") {
+                google.script.run.withSuccessHandler(function(data) {
+                    if (data) {
+                        document.getElementById('nama').value = data.nama || "";
+                        document.getElementById('email_karyawan').value = data.email || ""; 
+                        document.getElementById('unit_kerja').value = data.unit_kerja || "";
+                        document.getElementById('id_spx').value = data.id_spx || "";
+                        document.getElementById('team').value = data.team || "";
+                        document.getElementById('tgl_gabung').value = data.tgl_gabung || "";
+                        document.getElementById('tgl_mulai').value = data.tgl_mulai || "";
+                        document.getElementById('tgl_selesai').value = data.tgl_selesai || "";
+                        document.getElementById('lama_cuti').value = data.lama_cuti || "0";
+                        document.getElementById('alasan').value = data.alasan || "";
+                        document.getElementById('backup').value = data.backup || "";
+                        
+                        if (data.kategori_cuti) {
+                            document.getElementById('kategori_cuti').value = data.kategori_cuti;
+                            toggleEvidenceSection(); // Sesuaikan tampilan lampiran sesuai kategori
+                        }
+
+                        // Menampilkan Foto Evidence ke Approver
+                        if (data.link_evidence && data.link_evidence !== "-" && data.link_evidence.indexOf("http") !== -1) {
+                            document.getElementById('evidence_image_container').classList.remove('hidden');
+                            document.getElementById('no_evidence_text').classList.add('hidden');
+                            
+                            var directImgSrc = convertDriveUrlToThumbnail(data.link_evidence);
+                            document.getElementById('evidence_img_preview').src = directImgSrc;
+                            document.getElementById('evidence_url').href = data.link_evidence;
+                        } else {
+                            document.getElementById('evidence_image_container').classList.add('hidden');
+                            document.getElementById('no_evidence_text').classList.remove('hidden');
+                        }
+                    } else {
+                        alert("Data pengajuan tidak ditemukan atau link kadaluwarsa.");
+                    }
+                }).getPengajuanData(REQ_ID);
+            }
+        }
+
+        const d = new Date();
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        document.getElementById('current-date').innerText = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+        function hitungLamaCuti() {
+            const mulai = document.getElementById('tgl_mulai').value;
+            const selesai = document.getElementById('tgl_selesai').value;
+            const lamaInput = document.getElementById('lama_cuti');
+            if (mulai && selesai) {
+                const dateMulai = new Date(mulai);
+                const dateSelesai = new Date(selesai);
+                if (dateSelesai < dateMulai) {
+                    alert("Tanggal selesai tidak boleh sebelum tanggal mulai!");
+                    document.getElementById('tgl_selesai').value = "";
+                    lamaInput.value = "0";
+                    return;
+                }
+                const selisihHari = Math.ceil((dateSelesai.getTime() - dateMulai.getTime()) / (1000 * 3600 * 24)) + 1;
+                lamaInput.value = selisihHari;
+            }
+        }
+        document.getElementById('tgl_mulai').addEventListener('change', hitungLamaCuti);
+        document.getElementById('tgl_selesai').addEventListener('change', hitungLamaCuti);
+
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            let oldData = signaturePad ? signaturePad.toData() : null;
+
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+
+            if (!signaturePad) {
+                signaturePad = new SignaturePad(canvas, { 
+                    backgroundColor: 'rgba(255,255,255,0)', 
+                    penColor: 'rgb(30,41,59)' 
+                });
+            } else if (oldData) {
+                signaturePad.fromData(oldData);
+            }
+        }
+        window.addEventListener("resize", resizeCanvas);
+
+        window.addEventListener("DOMContentLoaded", () => {
+            terapkanHakAksesUIRole();
+            toggleEvidenceSection(); // Jalankan status awal visibilitas bukti
+            setTimeout(resizeCanvas, 300);
+            loadDataPengajuanKaryawan();
+        });
+
+        function clearSignature() { signaturePad.clear(); }
+        function undoSignature() {
+            const data = signaturePad.toData();
+            if (data.length > 0) { data.pop(); signaturePad.fromData(data); }
+        }
+
+        // Modal Approval Handler
+        const modal = document.getElementById('review-modal');
+        document.getElementById('leave-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (signaturePad.isEmpty()) {
+                return alert("Harap bubuhkan tanda tangan Anda terlebih dahulu!");
+            }
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('back-btn').addEventListener('click', () => modal.classList.add('hidden'));
+
+        document.getElementById('confirm-btn').addEventListener('click', function() {
+            const btn = this;
+            btn.disabled = true; btn.innerText = "Memproses...";
+
+            const base64Signature = signaturePad.toDataURL("image/png");
+
+            const dataForm = {
+                role: CURRENT_ROLE,
+                reqId: REQ_ID,
+                action: "approve",
+                nama: document.getElementById('nama').value,
+                unit_kerja: document.getElementById('unit_kerja').value,
+                id_spx: document.getElementById('id_spx').value,
+                team: document.getElementById("team").value,
+                email_karyawan: document.getElementById("email_karyawan").value, 
+                tgl_gabung: document.getElementById('tgl_gabung').value,
+                lama_cuti: document.getElementById('lama_cuti').value,
+                tgl_mulai: document.getElementById('tgl_mulai').value,
+                tgl_selesai: document.getElementById('tgl_selesai').value,
+                alasan: document.getElementById('alasan').value,
+                backup: document.getElementById('backup').value,
+                kategori_cuti: document.getElementById('kategori_cuti').value,
+                base64Evidence: base64EvidenceData,
+                ttd3: base64Signature
+            };
+
+            google.script.run
+                .withSuccessHandler(function(res) {
+                    modal.classList.add('hidden');
+                    document.getElementById('action-buttons').classList.add('hidden');
+                    
+                    const alertBox = document.getElementById('success-alert');
+                    const alertText = document.getElementById('alert-text');
+                    alertBox.classList.remove('hidden');
+
+                    const nextStep = res.next ? res.next.toUpperCase().trim() : "";
+
+                    if (nextStep === "TL") {
+                        alertText.innerText = "🚀 Sukses! Pengajuan Anda telah terkirim ke SeaTalk Team Lead untuk approval.";
+                    } else if (nextStep === "SL") {
+                        alertText.innerText = "✅ Terima kasih! Approval Team Lead berhasil direkam, diteruskan ke Shift Lead.";
+                    } else if (nextStep === "TP LEAD") {
+                        alertText.innerText = "✅ Terima kasih! Approval Shift Lead berhasil direkam, diteruskan ke TP Lead.";
+                    } else if (nextStep === "APPROVED") {
+                        alertText.innerText = "🎉 Selesai! Seluruh approval tuntas. Dokumen PDF final sudah dibuat.";
+                        const dl = document.getElementById('download-btn');
+                        dl.href = res.pdfUrl;
+                        dl.classList.remove('hidden');
+                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                })
+                .withFailureHandler(function(err) {
+                    alert("🚨 SERVER ERROR: " + err.message + "\n\nSilakan hubungi admin.");
+                    console.error(err);
+                    btn.disabled = false; btn.innerText = "Kirim Sekarang";
+                    modal.classList.add('hidden');
+                })
+                .submitWorkflow(dataForm);
+        });
+
+        // Modal Reject Handler
+        const rejectModal = document.getElementById('reject-modal');
+        function openRejectModal() { rejectModal.classList.remove('hidden'); }
+        function closeRejectModal() { rejectModal.classList.add('hidden'); }
+
+        function executeReject() {
+            const btn = document.getElementById('confirm-reject-btn');
+            btn.disabled = true; btn.innerText = "Menolak...";
+
+            const dataForm = {
+                role: CURRENT_ROLE,
+                reqId: REQ_ID,
+                action: "reject"
+            };
+
+            google.script.run
+                .withSuccessHandler(function(res) {
+                    closeRejectModal();
+                    document.getElementById('action-buttons').classList.add('hidden');
+                    
+                    const rejectBox = document.getElementById('reject-alert');
+                    const rejectText = document.getElementById('reject-alert-text');
+                    rejectBox.classList.remove('hidden');
+                    rejectText.innerText = "❌ Pengajuan cuti ini berhasil DITOLAK oleh " + (res.by || "Approver") + ".";
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                })
+                .withFailureHandler(function(err) {
+                    alert("🚨 Gagal menolak: " + err.message);
+                    btn.disabled = false; btn.innerText = "Ya, Tolak Cuti";
+                    closeRejectModal();
+                })
+                .submitWorkflow(dataForm);
+        }
+    </script>
+</body>
+</html>
